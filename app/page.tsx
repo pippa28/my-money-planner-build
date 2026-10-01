@@ -1,6 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
+import Link from 'next/link'
+import { createClient } from '@/lib/supabase/client'
 import {
   ArrowDownLeft,
   ArrowUpRight,
@@ -74,7 +76,7 @@ function ShoppingBasketIcon({ className }: { className?: string }) { return <spa
 function ZapIcon({ className }: { className?: string }) { return <span className={className}>ϟ</span> }
 function TrainIcon({ className }: { className?: string }) { return <span className={className}>↝</span> }
 
-export default function Page() {
+function Dashboard() {
   const [active, setActive] = useState('Dashboard')
   const [sidebarOpen, setSidebarOpen] = useState(false)
 
@@ -103,7 +105,7 @@ export default function Page() {
       <div className="lg:pl-[252px]">
         <header className="sticky top-0 z-20 flex h-[72px] items-center justify-between border-b border-[#e4e9e4] bg-[#F8F9F6]/95 px-5 backdrop-blur-md sm:px-8 lg:px-10">
           <div className="flex items-center gap-3"><Button variant="ghost" size="icon" className="lg:hidden" onClick={() => setSidebarOpen(true)} aria-label="Open navigation"><Menu /></Button><div><p className="text-xs font-medium text-[#829089]">Friday, 28 June 2024</p><h1 className="text-lg font-bold tracking-tight sm:text-xl">Good morning, Olivia</h1></div></div>
-          <div className="flex items-center gap-2 sm:gap-4"><Button variant="ghost" size="icon" className="hidden text-[#718078] sm:inline-flex" aria-label="Search"><Search /></Button><Button variant="ghost" size="icon" className="relative text-[#718078]" aria-label="Notifications"><Bell /><span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-[#D28A55]" /></Button><Separator orientation="vertical" className="hidden h-7 sm:block" /><DropdownMenu><DropdownMenuTrigger asChild><button className="flex items-center gap-2 rounded-full p-1.5 hover:bg-white"><Avatar className="size-8"><AvatarFallback className="bg-[#dcece1] text-xs font-semibold text-[#21866B]">OC</AvatarFallback></Avatar><span className="hidden text-sm font-semibold sm:block">Olivia Carter</span><ChevronDown className="hidden size-4 text-[#829089] sm:block" /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem>Profile</DropdownMenuItem><DropdownMenuItem>Preferences</DropdownMenuItem><DropdownMenuItem>Sign out</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
+          <div className="flex items-center gap-2 sm:gap-4"><Button variant="ghost" size="icon" className="hidden text-[#718078] sm:inline-flex" aria-label="Search"><Search /></Button><Button variant="ghost" size="icon" className="relative text-[#718078]" aria-label="Notifications"><Bell /><span className="absolute right-1.5 top-1.5 size-1.5 rounded-full bg-[#D28A55]" /></Button><Separator orientation="vertical" className="hidden h-7 sm:block" /><DropdownMenu><DropdownMenuTrigger asChild><button className="flex items-center gap-2 rounded-full p-1.5 hover:bg-white"><Avatar className="size-8"><AvatarFallback className="bg-[#dcece1] text-xs font-semibold text-[#21866B]">OC</AvatarFallback></Avatar><span className="hidden text-sm font-semibold sm:block">Olivia Carter</span><ChevronDown className="hidden size-4 text-[#829089] sm:block" /></button></DropdownMenuTrigger><DropdownMenuContent align="end"><DropdownMenuItem>Profile</DropdownMenuItem><DropdownMenuItem>Preferences</DropdownMenuItem><DropdownMenuItem onClick={() => createClient().auth.signOut().then(() => window.location.assign('/'))}>Sign out</DropdownMenuItem></DropdownMenuContent></DropdownMenu></div>
         </header>
 
         <main className="mx-auto max-w-[1500px] px-5 py-7 sm:px-8 lg:px-10 lg:py-9">
@@ -142,4 +144,18 @@ function MetricCard({ icon: Icon, label, value, detail, positive }: { icon: type
 function Goal({ name, current, target, progress, color }: { name: string, current: string, target: string, progress: number, color: string }) { return <div className="border-t border-[#edf0ed] py-3.5 first:border-t-0"><div className="mb-2 flex items-center justify-between text-sm"><span className="font-semibold">{name}</span><span className="text-xs text-[#829089]">{current} <span className="text-[#b1bab4]">of {target}</span></span></div><div className="h-2 overflow-hidden rounded-full bg-[#edf0ed]"><div className={`h-full rounded-full ${color}`} style={{ width: `${progress}%` }} /></div><p className="mt-1.5 text-[11px] text-[#829089]">{progress}% complete</p></div> }
 function Upcoming({ title, date, amount }: { title: string, date: string, amount: string }) { return <div className="flex items-center justify-between border-t border-[#edf0ed] py-3.5 first:border-t-0"><div><p className="text-sm font-semibold">{title}</p><p className="mt-0.5 text-xs text-[#829089]">{date}</p></div><span className="text-sm font-semibold">{amount}</span></div> }
 function BudgetLine({ name, value, progress }: { name: string, value: string, progress: number }) { return <div className="border-t border-[#edf0ed] py-3.5 first:border-t-0"><div className="mb-2 flex justify-between text-sm"><span className="font-semibold">{name}</span><span className="text-xs text-[#829089]">{value}</span></div><Progress value={progress} className="h-2 bg-[#edf0ed]" /></div> }
+
+export default function Page() {
+  const [ready, setReady] = useState(false)
+  const [signedIn, setSignedIn] = useState(false)
+  useEffect(() => {
+    const supabase = createClient()
+    supabase.auth.getUser().then(({ data }) => { setSignedIn(Boolean(data.user)); setReady(true) })
+    const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => setSignedIn(Boolean(session)))
+    return () => listener.subscription.unsubscribe()
+  }, [])
+  if (!ready) return <div className="flex min-h-screen items-center justify-center bg-[#F8F9F6] text-sm text-[#718078]">Loading your private workspace…</div>
+  if (!signedIn) return <main className="flex min-h-screen items-center justify-center bg-[#F8F9F6] px-5 text-center text-[#172B3A]"><div className="max-w-md"><div className="mx-auto mb-5 flex size-14 items-center justify-center rounded-2xl bg-[#21866B] text-2xl font-bold text-white">£</div><h1 className="text-3xl font-bold">Your money, privately organised.</h1><p className="mt-3 text-sm leading-relaxed text-[#718078]">Sign in to access your personal dashboard. Every record is protected by your account and Supabase Row Level Security.</p><div className="mt-7 flex justify-center gap-3"><Link href="/auth/login" className="rounded-xl bg-[#21866B] px-5 py-3 text-sm font-semibold text-white">Sign in</Link><Link href="/auth/sign-up" className="rounded-xl border border-[#dfe7e0] bg-white px-5 py-3 text-sm font-semibold">Create account</Link></div></div></main>
+  return <Dashboard />
+}
 
