@@ -1,0 +1,2 @@
+import { FinanceAppShell, EmptyState, PageIntro } from '@/components/finance-app-shell'
+export default function InsightsPage() { return <FinanceAppShell title="Insights"><PageIntro title="Insights" description="Useful patterns from your financial activity, when enough real data is available." /><EmptyState title="No insights yet" description="Add and categorize more saved transactions before we generate real financial analysis." /></FinanceAppShell> }
