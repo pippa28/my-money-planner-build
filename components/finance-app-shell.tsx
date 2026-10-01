@@ -51,7 +51,7 @@ export function PageIntro({ eyebrow = 'Private workspace', title, description, a
 
 export function EmptyState({ title, description }: { title: string; description: string }) { return <div className="rounded-2xl border border-dashed border-[#dce5dd] bg-white/60 px-6 py-12 text-center"><p className="font-semibold">{title}</p><p className="mt-1 text-sm text-[#718078]">{description}</p></div> }
 
-export function FormButton({ children, onClick }: { children: React.ReactNode; onClick?: () => void }) { return <Button type={onClick ? 'button' : 'submit'} onClick={onClick} className="rounded-xl bg-[#21866B] text-white hover:bg-[#176b55]">{children}</Button> }
+export function FormButton({ children, onClick, disabled }: { children: React.ReactNode; onClick?: () => void; disabled?: boolean }) { return <Button type={onClick ? 'button' : 'submit'} onClick={onClick} disabled={disabled} className="rounded-xl bg-[#21866B] text-white hover:bg-[#176b55]">{children}</Button> }
 
 export function DataCard({ children }: { children: React.ReactNode }) { return <div className="rounded-2xl border border-[#e4e9e4] bg-white p-5 shadow-none">{children}</div> }
 
