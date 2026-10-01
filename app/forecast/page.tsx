@@ -1,0 +1,2 @@
+import { FinanceAppShell, EmptyState, PageIntro } from '@/components/finance-app-shell'
+export default function ForecastPage() { return <FinanceAppShell title="Forecast"><PageIntro title="Forecast" description="Understand what may be ahead based on your saved financial history." /><EmptyState title="Forecasting is coming soon" description="We will only show projections once they are calculated from your real saved data." /></FinanceAppShell> }
