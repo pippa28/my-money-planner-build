@@ -3,7 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
-import { ArrowDownLeft, CalendarDays, ChevronDown, CreditCard, FileText, LayoutDashboard, Lightbulb, Menu, PiggyBank, Settings, ShieldCheck, TrendingUp, Wallet, X } from 'lucide-react'
+import { CalendarDays, ChevronDown, CreditCard, LayoutDashboard, Menu, PiggyBank, Settings, ShieldCheck, Wallet, X } from 'lucide-react'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
@@ -11,7 +11,7 @@ import { Separator } from '@/components/ui/separator'
 import { createClient } from '@/lib/supabase/client'
 
 export const navItems = [
-  { label: 'Dashboard', href: '/dashboard', icon: LayoutDashboard }, { label: 'My Budget', href: '/budget', icon: Wallet }, { label: 'Transactions', href: '/transactions', icon: ArrowDownLeft }, { label: 'Bank Statements', href: '/bank-statements', icon: FileText }, { label: 'Savings', href: '/savings', icon: PiggyBank }, { label: 'Debts', href: '/debts', icon: CreditCard }, { label: 'Calendar', href: '/calendar', icon: CalendarDays }, { label: 'Forecast', href: '/forecast', icon: TrendingUp }, { label: 'Insights', href: '/insights', icon: Lightbulb },
+  { label: 'Overview', href: '/dashboard', icon: LayoutDashboard }, { label: 'My Budget', href: '/budget', icon: Wallet }, { label: 'My Debts', href: '/debts', icon: CreditCard }, { label: 'Savings & Goals', href: '/savings', icon: PiggyBank }, { label: 'Calendar', href: '/calendar', icon: CalendarDays },
 ]
 
 export function getDisplayName(fullName?: string | null, metadataName?: string | null) {
